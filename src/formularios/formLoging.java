@@ -8,6 +8,15 @@ package formularios;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import clases.Datos;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import servicios.ConexionBD;
 
 /**
  *
@@ -118,21 +127,44 @@ public class formLoging extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        Datos misDatos = new Datos();
-        // simple validacion para ingresar al sistema
-        if (!misDatos.validarUsuario(txtUsuario.getText(), new String(txtClave.getPassword()))) {
+        /*codigo de autentificacion con BD*/
+        Connection connection;
+        ConexionBD cnBD = new ConexionBD();
+        connection = cnBD.conectar();
+        String usuario = txtUsuario.getText();
+        char[] pw = txtClave.getPassword();
+        String clave = String.valueOf(pw);
+        try {
+            String consulta;
+            consulta = "SELECT * FROM admin WHERE nombre='" + usuario + "' &&"
+                    + "(clave)='" + clave + "'";
+            Statement statement;
+            statement = connection.createStatement();
+            ResultSet resultSet;
+            resultSet = statement.executeQuery(consulta);
+            resultSet.next();
+
+            if (resultSet != null) {
+                // obtenemos los datos de la tabla de la BD
+                String id_usuario = ("" + resultSet.getInt(1));
+                String nombre_usuario = ("" + resultSet.getString(2));
+                String clave_usuario = ("" + resultSet.getString(3));
+                
+                if (nombre_usuario.equals(usuario) && clave_usuario.equals(clave)) {
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Acceso Valido");
+                    FormPrincipal miFormPrincipal = new FormPrincipal();
+                    this.setVisible(false);
+                    miFormPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    miFormPrincipal.setVisible(true);
+                }
+            }
+        } catch (SQLException | HeadlessException e) {
             JOptionPane.showMessageDialog(rootPane, "Usuario o Clave Incorrecta");
             txtUsuario.setText("");
             txtClave.setText("");
             txtUsuario.requestFocusInWindow();
-        } else {
-            // si todo esta bien nos envia al formulario Principal
-            FormPrincipal miFormPrincipal = new FormPrincipal();
-            this.setVisible(false);
-            miFormPrincipal.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            miFormPrincipal.setVisible(true);
         }
-
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**
