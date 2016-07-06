@@ -41,7 +41,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         menuUsuarioConfiguracion = new javax.swing.JMenuItem();
         menuUsuarioSalir = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Spem");
 
         menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/clientes.png"))); // NOI18N
@@ -58,6 +58,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         menuClienteAlta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/altaCliente.png"))); // NOI18N
         menuClienteAlta.setText("Nuevo Cliente");
+        menuClienteAlta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClienteAltaActionPerformed(evt);
+            }
+        });
         menuCliente.add(menuClienteAlta);
 
         jMenuBar1.add(menuCliente);
@@ -120,6 +125,12 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void menuClienteListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClienteListadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuClienteListadoActionPerformed
+
+    private void menuClienteAltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClienteAltaActionPerformed
+        // creamos un objeto del formulario para que cuando se haga click se llame a la ventana.
+        NuevoCliente nuevoCliente = new NuevoCliente();
+        nuevoCliente.setVisible(true);
+    }//GEN-LAST:event_menuClienteAltaActionPerformed
 
     /**
      * @param args the command line arguments
